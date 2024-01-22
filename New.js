@@ -23,30 +23,19 @@ async function scrapeAmazon() {
     return Array.from(items.values());
   });
 
-//   Map categories and subcategories
-//   for (const laptop of laptops) {
-//       await page.goto(laptop.url, { waitUntil: 'networkidle2' });
-//       const categoryDetails = await page.evaluate(() => {
-//           let category = document.querySelector('a-price-whole')?.innerText;
-//           let subcategory = category<20000;
-//           return { category, subcategory };
-//       });
-//       laptop.category = categoryDetails.category;
-//       laptop.subcategory = categoryDetails.subcategory;
-//   }
 
-  // Extract delivery fee and estimated delivery time
+
+  // Extracting delivery fee and estimated delivery time
   for (const laptop of laptops) {
     try {
-      // Navigate to the product page
+      // going to the product page
       await page.goto(laptop.url, { waitUntil: "networkidle2" });
 
       // Add item to cart
-      // Note: The selector for the add to cart button needs to be accurate
       await page.click("selector-for-add-to-cart-button");
       await page.waitForNavigation({ waitUntil: "networkidle2" });
 
-      // Navigate to the cart page
+      // going to the cart page
       await page.goto("https://www.amazon.in/gp/cart/view.html", {
         waitUntil: "networkidle2",
       });
@@ -56,7 +45,7 @@ async function scrapeAmazon() {
       await page.click("a-button-input");
       await page.waitForNavigation({ waitUntil: "networkidle2" });
 
-      // Extract delivery information
+      // Extracting delivery information
       const deliveryInfo = await page.evaluate(() => {
         const deliveryFee = document.querySelector(
           ".a-row.a-spacing-mini .a-span3 .a-text-bold"
@@ -82,7 +71,6 @@ async function scrapeAmazon() {
 
 scrapeAmazon().then((laptops) => {
   console.log(laptops);
-  // Further actions like saving data
 });
 async function saveToNDJSON(data, filename) {
   const stream = fs.createWriteStream(filename, { flags: "a" });
